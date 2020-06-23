@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title></title>
+	<meta charset="utf-8">  
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	
+	<!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style5.css">
+</head>
+<body>
+	
+	<div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3><a href="/listaDeProcuradores">Ministério Público Federal</a></h3>
+                </div>
+
+                <ul class="list-unstyled components">
+                    <p>Opções</p>
+                    <li class="active">
+                        <a href="/listaDeProcuradores" data-toggle="collapse">
+                        	<i class="fa fa-home" aria-hidden="true"></i> Início
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuProcuradores" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuProcuradores">
+                            <li><a href="cadastrarProcurador"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeProcuradores"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSubstitutos" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores Subst.
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSubstitutos">
+                            <li><a href="cadastrarSubstituto"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSubstitutos"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSecretarios" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Secretários
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSecretarios">
+                            <li><a href="cadastrarSecretario"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSecretarios"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Content Holder -->
+            <div id="content">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                        <!-- gambiarra para logout -->
+						<form id="form_id" method="post" action="/logout"></form>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">   
+                            <li><a href="#">Olá,<b> <span> Administrador</span></b></a></li>
+                            <li><a href="/">Sair</a></li>
+                            <!--                	
+                                <li><a href="#"><b>Olá, <span id="user" th:text="${session.usuarioLogado.login}"></span></b></a></li>
+								<li><a href="javascript:$('#form_id').submit();">Sair</a></li>  -->                               
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+				<div class="form-group">
+	                <h2>Cadastro de Procuradores:</h2>
+	                
+					<form id="cadastrar_procurador" method="POST" action="/cadastrarProcurador">
+						<label>Nome:</label>
+						<input type="text" name="nome" class="form-control">
+						<br>
+						
+						<label>Procurador Substituto:</label>
+						<div class="row">
+							<div class="col-md-9">
+								<select id="substituto" name="substituto_id" class="form-control" data-toggle="tooltip" data-placement="top" 
+								title="Se o Procurador substituto que você quer não estiver nas opções aqui listadas,
+								clique no botão ao lado para cadastrá-lo!">
+									<div th:each="s : ${substitutos}">
+								    	<option th:value="${s.id}" th:text="${s.nome}"></option>
+								    </div>
+								</select>    							
+							</div>
+							
+							<div class="col-md-3">
+								<button data-target="#editar" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-placement="top" 
+								title="Se o Procurador substituto que você quer não estiver listado nas opções ao lado,
+								clique aqui para cadastrá-lo!">
+									Cadastrar um Procurador Substituto
+								</button>   							
+							</div>
+						</div>
+						<br>
+						
+						<label>Procurador Substituto:</label>
+						<div class="row">
+							<div class="col-md-9">
+								<select id="secretario" name="secretario_id" class="form-control" data-toggle="tooltip" data-placement="top" 
+								title="Se o Secretário que você quer não estiver nas opções aqui listadas,
+								clique no botão ao lado para cadastrá-lo!">
+									<div th:each="sec : ${secretarios}">
+								    	<option th:value="${sec.id}" th:text="${sec.nome}"></option>
+								    </div>
+								</select>    							
+							</div>
+							
+							<div class="col-md-3">
+								<button data-target="#cadastrarSecretario" type="button" class="btn btn-primary btn-block" data-toggle="modal" data-placement="top" 
+								title="Se o Secretário que você quer não estiver listado nas opções ao lado,
+								clique aqui para cadastrá-lo!">
+									Cadastrar um Secretário
+								</button>   							
+							</div>
+						</div>
+						<br>
+							
+						<label>E-mail:</label>
+						<input type="email" name="email" class="form-control">
+						<br>
+						
+						<label>Celular Funcional:</label>
+						<input type="text" name="celular" class="form-control celular"  placeholder="Ex: (99) 99999-9999">
+						<br>
+						
+						<label>UF:</label>
+						<select id="uf" name="uf" class="form-control">
+						    <option value="AC">Acre</option>
+						    <option value="AL">Alagoas</option>
+						    <option value="AP">Amapá</option>
+						    <option value="AM">Amazonas</option>
+						    <option value="BA">Bahia</option>
+						    <option value="CE">Ceará</option>
+						    <option value="DF">Distrito Federal</option>
+						    <option value="ES">Espírito Santo</option>
+						    <option value="GO">Goiás</option>
+						    <option value="MA">Maranhão</option>
+						    <option value="MT">Mato Grosso</option>
+						    <option value="MS">Mato Grosso do Sul</option>
+						    <option value="MG">Minas Gerais</option>
+						    <option value="PA">Pará</option>
+						    <option value="PB">Paraíba</option>
+						    <option value="PR">Paraná</option>
+						    <option value="PE">Pernambuco</option>
+						    <option value="PI">Piauí</option>
+						    <option value="RJ">Rio de Janeiro</option>
+						    <option value="RN">Rio Grande do Norte</option>
+						    <option value="RS">Rio Grande do Sul</option>
+						    <option value="RO">Rondônia</option>
+						    <option value="RR">Roraima</option>
+						    <option value="SC">Santa Catarina</option>
+						    <option value="SP">São Paulo</option>
+						    <option value="SE">Sergipe</option>
+						    <option value="TO">Tocantins</option>
+						</select>
+						<br>
+						
+						<label>Portaria:</label>
+						<input type="text" name="portaria" class="form-control">
+						<br>
+						
+						<div class="row">
+							<div class="col-md-6">
+								<label>Início do Mandato:</label>
+								<input type="date" name="inicioMandato" class="form-control">
+								<br>
+							</div>
+							
+							<div class="col-md-6">					
+								<label>Fim do Mandato:</label>
+								<input type="date" name="fimMandato" class="form-control">
+								<br>
+							</div>
+						</div>
+						
+						<label>Etiqueta Endereço procuradoria:</label>
+						<textarea class="form-control" name="etiqueta_endereco" rows="3"></textarea>
+						<br>
+						
+						<label>Telefone:</label>
+						<input type="text" name="telefone" class="form-control telefone" placeholder="Ex: (99) 9999-9999">
+						<br>
+						
+						<button type="submit" class="btn btn-primary chamaCadastro">Cadastrar</button>
+					</form>
+
+				    <div class="line"></div>
+			    </div>
+			</div>
+        </div>
+        
+        <!-- Modal Edição-->
+		<div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalLabel">Cadastrar Procurador Substituto</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form id="cadastrar_substituto" method="POST" action="/cadastrarSubstituto">
+						<label>Nome:</label>
+						<input type="text" name="nome" class="form-control">
+						<br>
+						
+						<label>E-mail:</label>
+						<input type="email" name="email" class="form-control">
+						<br>
+						
+						<label>Celular Funcional:</label>
+						<input type="text" name="celular" class="form-control celular"  placeholder="Ex: (99) 99999-9999">
+						<br>
+						
+						<label>Portaria:</label>
+						<input type="text" name="portaria" class="form-control">
+						<br>
+
+						<label>Início do Mandato:</label>
+						<input type="date" name="inicioMandato" class="form-control">
+						<br>
+
+						<label>Fim do Mandato:</label>
+						<input type="date" name="fimMandato" class="form-control">
+						<br>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			        <button type="submit" class="btn btn-primary">Cadastrar</button>
+			      </div>
+		      	</form>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- Modal Secretario -->
+		<div class="modal fade" id="cadastrarSecretario" tabindex="-1" role="dialog" aria-labelledby="editarModalSecretario" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalSecretario">Cadastrar Scretário</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form id="cadastrar_secretario" method="POST" action="/cadastrarSecretario">
+						<label>Nome:</label>
+						<input type="text" name="nome" class="form-control">
+						<br>
+						
+						<label>E-mail:</label>
+						<input type="email" name="email" class="form-control">
+						<br>
+						
+						<label>Telefone:</label>
+						<input type="text" name="telefone" class="form-control telefone"  placeholder="Ex: (99) 9999-9999">
+						<br>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			        <button type="submit" class="btn btn-primary">Cadastrar</button>
+			      </div>
+		      	</form>
+		    </div>
+		  </div>
+		</div>
+
+
+    <!-- jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- JQuery Confirm -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+	<!-- Máscara -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+	
+    <script type="text/javascript">
+    
+        $(document).ready(function () {
+        	
+        	//tooltip mensagem para o usuario no botao
+        	$(function () {
+  			  $('[data-toggle="tooltip"]').tooltip()
+  			})
+        	
+        	//AJAX
+        	
+        	$('#cadastrar_substituto').submit(function(event){
+	   		            event.preventDefault(); 
+	   		            var form = $(this);
+	   		            $.ajax({
+	   		              type: form.attr('method'),
+	   		              url: form.attr('action'),
+	   		              data: form.serialize(),
+
+	   		              success: function (response) {
+	
+	   		            	$('#editar').modal('hide');
+	   		            	$.alert({
+	   		            		title: '',
+	   		            		icon: 'fa fa-check-circle',
+	   		 			    	content: 'Procurador Substituto Cadastrado com <b> Sucesso! </b>',
+			                    type: 'green',
+			                    buttons: {
+			                        ok: function(){
+			                        	location.reload();
+			                        }
+			                    }
+	   		 				});
+	   		              },
+	   		              
+	   		              error: function (data) {
+								console.log(data);
+	   		              },
+	   		              
+	   		         });
+        		}); 
+        	
+	        	$('#cadastrar_secretario').submit(function(event){
+			            event.preventDefault(); 
+			            var form = $(this);
+			            $.ajax({
+			              type: form.attr('method'),
+			              url: form.attr('action'),
+			              data: form.serialize(),
+	
+			              success: function (response) {
+	
+			            	$('#cadastrarSecretario').modal('hide');
+			            	$.alert({
+			            		title: '',
+			            		icon: 'fa fa-check-circle',
+			 			    	content: 'Secretário Cadastrado com <b> Sucesso! </b>',
+		                    type: 'green',
+		                    buttons: {
+		                        ok: function(){
+		                        	location.reload();
+		                        }
+		                    }
+			 				});
+			              },
+			              
+			              error: function (data) {
+							console.log(data);
+			              },
+			              
+			         });
+			});
+        	
+        	$(document).on('click', '.chamaCadastro', function(){
+        	
+        		var id = $("#substituto_id").val();
+        		
+	        	$('#cadastrar_procurador').submit(function(event){
+
+			            event.preventDefault(); 
+			            var form = $(this);
+			            $.ajax({
+			              type: form.attr('method'),
+			              url: form.attr('action'),
+			              data: form.serialize()+"&substituto_id="+id,
+	
+			              success: function (response) {
+	
+			            	$.alert({
+			            		title: '',
+			            		icon: 'fa fa-check-circle',
+			 			    	content: 'Procurador Cadastrado com <b> Sucesso! </b>',
+		                    	type: 'green',
+			                   	 buttons: {
+			                        ok: function(){
+			                        	$(location).attr('href','/listaDeProcuradores');
+			                        }
+			                    }
+			 				});
+			              },
+			              
+			              error: function (data) {
+							console.log(data);
+			              },
+			            });   
+			         });
+        		});
+        	
+        	
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+            
+            jQuery("input.celular")
+            .mask("(99) 99999-9999")
+            .focusout(function (event) {  
+                var target, phone, element;  
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;  
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);  
+                element.unmask();  
+                if(phone.length > 10) {  
+                    element.mask("(99) 99999-999?9");  
+                } else {  
+                    element.mask("(99) 9999-9999?9");  
+                }  
+            });
+            
+            jQuery("input.telefone")
+            .mask("(99) 9999-9999")
+            .focusout(function (event) {  
+                var target, phone, element;  
+                target = (event.currentTarget) ? event.currentTarget : event.srcElement;  
+                phone = target.value.replace(/\D/g, '');
+                element = $(target);  
+                element.unmask();   
+            });
+        });
+    </script>  
+</body>
+</html>

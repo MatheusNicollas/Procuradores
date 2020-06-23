@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>  
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>    
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	
+	<!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style5.css">
+
+</head>
+<body>
+	
+	<div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3><a href="/listaDeProcuradores">Ministério Público Federal</a></h3>
+                </div>
+
+                <ul class="list-unstyled components">
+                    <p>Opções</p>
+                    <li class="active">
+                        <a href="/listaDeProcuradores" data-toggle="collapse">
+                        	<i class="fa fa-home" aria-hidden="true"></i> Início
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuProcuradores" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuProcuradores">
+                            <li><a href="cadastrarProcurador"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeProcuradores"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSubstitutos" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores Subst.
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSubstitutos">
+                            <li><a href="cadastrarSubstituto"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSubstitutos"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSecretarios" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Secretários
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSecretarios">
+                            <li><a href="cadastrarSecretario"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSecretarios"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Content Holder -->
+            <div id="content">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                        <!-- gambiarra para logout -->
+						<form id="form_id" method="post" action="/logout"></form>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">   
+                            	<li><a href="#">Olá,<b> <span> Administrador</span></b></a></li>
+                            	<li><a href="/">Sair</a></li>
+                            <!--                	
+                                <li><a href="#"><b>Olá, <span id="user" th:text="${session.usuarioLogado.login}"></span></b></a></li>
+								<li><a href="javascript:$('#form_id').submit();">Sair</a></li>  -->                               
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <h2>Lista de Procuradores Substitutos</h2>
+                <table id="tabelaSubstitutos" class="display" style="width:100%">
+			        <thead>    	
+			            <tr>
+			            	<th>UF</th>
+			                <th>Nome</th>
+			                <th>E-mail</th>
+			                <th>Celular</th>
+			                <th>Portaria</th>
+			                <th>Início do Mandato</th>
+			                <th>Fim do Mandato</th>		                			                
+			                <th>Opções</th>			                			                
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<div th:each="s : ${substitutos}">
+			        		<tr>
+			        			<td><span th:text="${s.uf}"></span></td>
+				                <td><span th:text="${s.nome}"></span></td>
+				                <td><span th:text="${s.email}"></span></td>
+				                <td><span th:text="${s.celular}"></span></td>
+				                <td><span th:text="${s.portaria}"></span></td>
+				                <td><span th:text="${s.inicioMandato}"></span></td>
+				                <td><span th:text="${s.fimMandato}"></span></td>
+				                <td>			                	
+				                	<button type="button" class="btn btn-primary btn-sm modal_ajax" th:id="${s.id}" data-toggle="modal" data-target="#editar">
+									  	<i class="fa fa-pencil" aria-hidden="true"></i>	
+									  	<!-- <a th:href="${#mvc.url('PC#detalhesProcurador').arg(0, procurador.id).build()}" href="/procuraProcurador"></a> -->								  	
+									</button>
+				                	<button th:value="${s.id}" onclick="confirmaExclusao(this.value)" type="button" class="btn btn-danger btn-sm excluir_substituto">
+									  	 <i class="fa fa-trash" aria-hidden="true"></i>
+									</button>
+									<!--th:href="${#mvc.url('PC#deletaProcurador').arg(0, procurador.id).build()}" -->	
+				                </td>     
+			            	</tr>
+			        	</div>          
+			        </tbody>
+			    </table>			    
+			    <a class="btn btn-primary" href="/cadastrarSubstituto" role="button"><i class="fa fa-plus" aria-hidden="true"></i> Cadastrar Novo Procurador Substituto</a>
+			    <div class="line"></div>
+			</div>
+        </div>
+		
+		<!-- Modal Edição-->
+		<div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalLabel">Editar dados do Procurador Substituto</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="/cadastrarSubstituto" id="alterar_substituto">
+		          <div class="form-group">
+		            <label for="recipient-name" class="col-form-label">Nome:</label>
+		            <input type="text" class="form-control" name="nome" id="nome">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">E-mail:</label>
+		            <input type="text" class="form-control" name="email" id="email">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Celular Funcional:</label>
+		            <input type="text" class="form-control telefone" name="celular" id="celular" placeholder="Ex: (99) 99999-9999">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">UF:</label>
+		          	<select id="uf" name="uf" class="form-control">
+					    <option value="AC">Acre</option>
+					    <option value="AL">Alagoas</option>
+					    <option value="AP">Amapá</option>
+					    <option value="AM">Amazonas</option>
+					    <option value="BA">Bahia</option>
+					    <option value="CE">Ceará</option>
+					    <option value="DF">Distrito Federal</option>
+					    <option value="ES">Espírito Santo</option>
+					    <option value="GO">Goiás</option>
+					    <option value="MA">Maranhão</option>
+					    <option value="MT">Mato Grosso</option>
+					    <option value="MS">Mato Grosso do Sul</option>
+					    <option value="MG">Minas Gerais</option>
+					    <option value="PA">Pará</option>
+					    <option value="PB">Paraíba</option>
+					    <option value="PR">Paraná</option>
+					    <option value="PE">Pernambuco</option>
+					    <option value="PI">Piauí</option>
+					    <option value="RJ">Rio de Janeiro</option>
+					    <option value="RN">Rio Grande do Norte</option>
+					    <option value="RS">Rio Grande do Sul</option>
+					    <option value="RO">Rondônia</option>
+					    <option value="RR">Roraima</option>
+					    <option value="SC">Santa Catarina</option>
+					    <option value="SP">São Paulo</option>
+					    <option value="SE">Sergipe</option>
+					    <option value="TO">Tocantins</option>
+					</select>
+				  </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Portaria:</label>
+		            <input type="text" class="form-control" name="portaria" id="portaria">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Início do Mandato:</label>
+		            <input type="date" class="form-control" name="inicioMandato" id="inicioMandato">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Fim do Mandato:</label>
+		            <input type="date" class="form-control" name="fimMandato" id="fimMandato">
+		          </div>	        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+		        <button type="submit" class="btn btn-primary">Alterar</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
+    <!-- jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- JQuery Confirm -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    
+    <!--Data Tables Bootstrap -->
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <!-- datatables -->
+	<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>    
+	<!-- Máscara -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+	
+	<script>		
+	
+		function confirmaExclusao(idP){
+			
+			$.alert({
+           		title: '',
+           		icon: 'fa fa-trash',
+			    content: 'Tem certeza que deseja <b>deletar</b> este Procurador Substituto?',
+                type: 'red',
+                buttons: {
+                	não: function(){               		
+                	},
+                	
+                	sim:{
+                		text: 'sim',
+                        btnClass: 'btn-red',
+                		action: function(){
+                			
+                			$.ajax({
+            		            url:"/deletarSubstituto",
+            		            method:"GET",
+            		            data:{id:idP},
+            		            dataType:"json",
+            		       
+        	    		       	success:function(response){
+        	
+        	    		       		$.alert({
+        	   		            		title: '',
+        	   		            		icon: 'fa fa-check-circle',
+        	   		 			    	content: 'Procurador Substituto Deletado com <b> Sucesso! </b>',
+        			                    type: 'green',
+        			                    buttons: {
+        			                        ok: function(){
+        			                        	location.reload();
+        			                        }
+        			                    }
+        	   		 				});
+        	    		          
+        	    		      	},
+        	    		      	error: function (response) {
+        	
+        	    		        	console.log(response);	
+        	    		    	}
+            		    	});  			
+                        }
+                	}
+                	                   
+                }
+			});
+		}	
+	
+    	$(document).ready(function() {    		
+    		
+    		////// AJAX ///////    		
+
+    		$(document).on('click', '.modal_ajax', function(){
+    		   var id = $(this).attr('id');
+
+    		        $.ajax({
+    		            url:"/buscaSubstituto",
+    		            method:"GET",
+    		            data:{id:id},
+    		            dataType:"json",
+    		       
+	    		       	success:function(data){
+	
+	    		          $("#nome").val(data.nome);
+	    		          $("#email").val(data.email);
+	    		          $("#celular").val(data.celular);
+	    		          $("#portaria").val(data.portaria);
+	    		          $("#uf").val(data.uf).change();
+	    		          $("#inicioMandato").val(data.inicioMandato);
+	    		          $("#fimMandato").val(data.fimMandato);
+	    		          
+	    		      	},
+	    		      	error: function (data) {
+	
+	    		        	console.log('An error occurred.');	
+	    		    	}
+    		    	});
+	    		        
+	   		        $('#alterar_substituto').submit(function(event){
+	   		            event.preventDefault(); 
+	   		            var form = $(this);
+	   		            $.ajax({
+	   		              type: form.attr('method'),
+	   		              url: form.attr('action'),
+	   		              data: form.serialize()+"&id="+id,
+
+	   		              success: function (response) {
+	
+	   		            	$('#editar').modal('hide');
+	   		            	$.alert({
+	   		            		title: '',
+	   		            		icon: 'fa fa-check-circle',
+	   		 			    	content: 'Procurador Substituto Alterado com <b> Sucesso! </b>',
+			                    type: 'green',
+			                    buttons: {
+			                        ok: function(){
+			                        	location.reload();
+			                        }
+			                    }
+	   		 				});
+	   		              },
+	   		              
+	   		              error: function (data) {
+								console.log(data);
+	   		              },
+	   		              
+	   		         });
+   		            
+   		      });  
+   		           		        
+   				////// PLUGIN DE MASCARA ///////	  		        
+    		        
+	   		     jQuery("input.celular")
+	             .mask("(99) 99999-9999")
+	             .focusout(function (event) {  
+	                 var target, phone, element;  
+	                 target = (event.currentTarget) ? event.currentTarget : event.srcElement;  
+	                 phone = target.value.replace(/\D/g, '');
+	                 element = $(target);  
+	                 element.unmask();  
+	                 if(phone.length > 10) {  
+	                     element.mask("(99) 99999-999?9");  
+	                 } else {  
+	                     element.mask("(99) 9999-9999?9");  
+	                 }  
+	             });
+    		        		
+    		});
+    		
+    		////// MENU///////
+    		
+    		$('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+    		
+    		////// DATA TABLES ///////
+		
+    		//Tradução da estrutura
+            $('#tabelaSubstitutos').DataTable( {
+                "language": {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "Mostrando _MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    },
+                    "select": {
+                        "rows": {
+                            "_": "Selecionado %d linhas",
+                            "0": "Nenhuma linha selecionada",
+                            "1": "Selecionado 1 linha"
+                        }
+                    },
+                    "buttons": {
+                        "copy": "Copiar para a área de transferência",
+                        "copyTitle": "Cópia bem sucedida",
+                        "copySuccess": {
+                            "1": "Uma linha copiada com sucesso",
+                            "_": "%d linhas copiadas com sucesso"
+                        }
+                    }
+                }
+
+            });
+        });
+	</script>
+</body>
+</html>

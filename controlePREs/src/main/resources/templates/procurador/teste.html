@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>  
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>    
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style5.css">
+
+</head>
+<body>
+	
+	<div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Ministério Público Federal</h3>
+                </div>
+
+                <ul class="list-unstyled components">
+                    <p>Opções</p>
+                    <li class="active">
+                        <a href="#homeSubmenu" data-toggle="collapse">
+                        	<i class="fa fa-home" aria-hidden="true"></i> Início
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                            <li><a href="cadastrarProcurador"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeProcuradores"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+            </nav>
+
+            <!-- Page Content Holder -->
+            <div id="content">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                        <!-- gambiarra para logout -->
+						<form id="form_id" method="post" action="/logout"></form>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">   
+                            <!--                	
+                                <li><a href="#"><b>Olá, <span id="user" th:text="${session.usuarioLogado.login}"></span></b></a></li>
+								<li><a href="javascript:$('#form_id').submit();">Sair</a></li>  -->                               
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <h2>Lista de Procuradores</h2>
+                <table id="example" class="display" style="width:100%">
+			        <thead>    	
+			            <tr>
+			            	<th>UF</th>
+			                <th>Nome</th>
+			                <th>E-mail</th>			                
+			                <th>Celular</th>
+			                <th>Portaria</th>
+			                <th>Mandato</th>
+			                <th>Etiqueta</th>
+			                <th>Telefone</th>
+			                <th>Opções</th>			                			                
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<div th:each="procurador : ${procuradores}">
+			        		<tr>
+			        			<td><span th:text="${procurador.uf}" id="uf_lista"></span></td>
+				                <td><span th:text="${procurador.nome}" id="nome_lista"></span></td>
+				                <td><span th:text="${procurador.email}" id="email_lista"></span></td>
+				                <td><span th:text="${procurador.celular}" id="celular_lista"></span></td>
+				                <td><span th:text="${procurador.portaria}" id="portaria_lista"></span></td>
+				                <td><span th:text="${procurador.mandato}" id="mandato_lista"></span></td>
+				                <td><span th:text="${procurador.etiqueta_endereco}" id="etiqueta_endereco_lista"></span></td>
+				                <td><span th:text="${procurador.telefone}" id="telefone_lista"></span></td>
+				                <td>
+				                	<a class="btn btn-info btn-sm" href="" role="button">
+				                		<i class="fa fa-info-circle" aria-hidden="true"></i> Detalhes
+				                	</a>			                	
+				                	<button th:value="${procurador.id} + '}{' + ${procurador.nome} + '}{' + ${procurador.email} + '}{' + 
+				                					  ${procurador.celular} + '}{' + ${procurador.uf} + '}{' + ${procurador.portaria} + '}{' + 
+				                					  ${procurador.mandato} + '}{' + ${procurador.etiqueta_endereco} + '}{' + ${procurador.telefone}"
+				                					   onclick="editaProcurador(this.value)" type="button" class="btn btn-primary btn-sm" data-toggle="modal" 
+				                					   data-target="#editar">
+									  	<i class="fa fa-pencil" aria-hidden="true"></i>	
+									  	<!-- <a th:href="${#mvc.url('PC#detalhesProcurador').arg(0, procurador.id).build()}" href="/procuraProcurador"></a> -->								  	
+									</button>
+				                	<button th:value="${procurador.id}" onclick="exluiProcurador(this.value)" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmacao" >
+									  	 <i class="fa fa-trash" aria-hidden="true"></i>
+									</button>
+									<!--th:href="${#mvc.url('PC#deletaProcurador').arg(0, procurador.id).build()}" -->	
+				                </td>     
+			            	</tr>
+			        	</div>          
+			        </tbody>
+			    </table>			    
+			    <a class="btn btn-primary" href="/cadastrarProcurador" role="button"><i class="fa fa-plus" aria-hidden="true"></i> Cadastrar Novo Procurador</a>
+			    <div class="line"></div>
+			</div>
+        </div>
+
+		<!-- Modal Confirmação-->
+		<div class="modal fade" id="confirmacao" tabindex="-1" role="dialog" aria-labelledby="confirmacao" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <form method="post" action="/deletarProcurador">
+		          <div class="form-group">
+		          	<h4 id="exampleModalLabel">Deseja realmente <b>excluir</b> o Procurador?</h4>
+		            <input type="hidden" name="id" id="id"/>
+		          </div>
+		          <div class="modal-footer">
+		          	<button type="submit" class="btn btn-danger">Sim</button>
+		          	<button type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+		          </div>	
+		        </form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- Modal Edição-->
+		<div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalLabel">Editar dados do Procurador</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form>
+		          <div class="form-group">
+		            <label for="recipient-name" class="col-form-label">Nome:</label>
+		            <input type="text" class="form-control" name="nome" id="nome">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">E-mail:</label>
+		            <input type="text" class="form-control" name="email" id="email">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Celular Funcional:</label>
+		            <input type="text" class="form-control" name="celular" id="celular">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">UF:</label>
+		          	<select id="uf" name="uf" class="form-control">
+					    <option value="AC">Acre</option>
+					    <option value="AL">Alagoas</option>
+					    <option value="AP">Amapá</option>
+					    <option value="AM">Amazonas</option>
+					    <option value="BA">Bahia</option>
+					    <option value="CE">Ceará</option>
+					    <option value="DF">Distrito Federal</option>
+					    <option value="ES">Espírito Santo</option>
+					    <option value="GO">Goiás</option>
+					    <option value="MA">Maranhão</option>
+					    <option value="MT">Mato Grosso</option>
+					    <option value="MS">Mato Grosso do Sul</option>
+					    <option value="MG">Minas Gerais</option>
+					    <option value="PA">Pará</option>
+					    <option value="PB">Paraíba</option>
+					    <option value="PR">Paraná</option>
+					    <option value="PE">Pernambuco</option>
+					    <option value="PI">Piauí</option>
+					    <option value="RJ">Rio de Janeiro</option>
+					    <option value="RN">Rio Grande do Norte</option>
+					    <option value="RS">Rio Grande do Sul</option>
+					    <option value="RO">Rondônia</option>
+					    <option value="RR">Roraima</option>
+					    <option value="SC">Santa Catarina</option>
+					    <option value="SP">São Paulo</option>
+					    <option value="SE">Sergipe</option>
+					    <option value="TO">Tocantins</option>
+					</select>
+				  </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Portaria:</label>
+		            <input type="text" class="form-control" name="portaria" id="portaria">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Mandato:</label>
+		            <input type="text" class="form-control" name="mandato" id="mandato">
+		          </div>
+		          
+		          <div class="form-group">
+		          	<label for="message-text" class="col-form-label">Etiqueta - Endereço Procuradoria:</label>
+		          	<textarea class="form-control" name="etiqueta_endereco" id="etiqueta_endereco"></textarea>
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Telefone:</label>
+		            <input type="text" class="form-control" name="telefone" id="telefone">
+		          </div>
+		          
+		        </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Send message</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap Js CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+        });        
+    </script>
+    <script>
+    	function exluiProcurador(id){
+    		document.getElementById("id").value = id;
+    		console.log(document.getElementById("id").value);
+    	}
+    	
+    	function editaProcurador(valores){
+    		
+    		let dados = valores.split("}{");
+    		
+    		for(let i = 0; i < dados.length; i++){
+    			alert(dados[i]);
+    		}
+    	}
+    	
+    </script>
+    
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>    
+	
+	<script>		
+    	$(document).ready(function() {
+            $('#example').DataTable( {
+                "language": {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "Mostrando _MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    },
+                    "select": {
+                        "rows": {
+                            "_": "Selecionado %d linhas",
+                            "0": "Nenhuma linha selecionada",
+                            "1": "Selecionado 1 linha"
+                        }
+                    },
+                    "buttons": {
+                        "copy": "Copiar para a área de transferência",
+                        "copyTitle": "Cópia bem sucedida",
+                        "copySuccess": {
+                            "1": "Uma linha copiada com sucesso",
+                            "_": "%d linhas copiadas com sucesso"
+                        }
+                    }
+                }
+
+
+            } );
+        } );
+	</script>
+</body>
+</html>

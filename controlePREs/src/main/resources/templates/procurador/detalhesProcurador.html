@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	   
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	<!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style5.css">
+
+</head>
+<body>
+	
+	<div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3><a href="/listaDeProcuradores">Ministério Público Federal</a></h3>
+                </div>
+
+                <ul class="list-unstyled components">
+                    <p>Opções</p>
+                    <li class="active">
+                        <a href="/listaDeProcuradores" data-toggle="collapse">
+                        	<i class="fa fa-home" aria-hidden="true"></i> Início
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuProcuradores" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuProcuradores">
+                            <li><a href="cadastrarProcurador"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeProcuradores"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSubstitutos" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Procuradores Subst.
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSubstitutos">
+                            <li><a href="cadastrarSubstituto"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSubstitutos"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#pageSubmenuSecretarios" data-toggle="collapse" aria-expanded="false">
+                        	<i class="fa fa-users" aria-hidden="true"></i> Secretários
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenuSecretarios">
+                            <li><a href="cadastrarSecretario"><i class="fa fa-user-plus" aria-hidden="true"></i> Cadastrar </a></li>
+                            <li><a href="listaDeSecretarios"><i class="fa fa-list" aria-hidden="true"></i> Listar</a></li>
+                        </ul>
+                    </li>
+                </ul>    
+                
+            </nav>
+
+            <!-- Page Content Holder -->
+            <div id="content">
+
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="navbar-btn">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                        </div>
+                        <!-- gambiarra para logout -->
+						<form id="form_id" method="post" action="/logout"></form>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">   
+                            <li><a href="#">Olá,<b> <span> Administrador</span></b></a></li>
+                            <li><a href="/">Sair</a></li>
+                            <!--                	
+                                <li><a href="#"><b>Olá, <span id="user" th:text="${session.usuarioLogado.login}"></span></b></a></li>
+								<li><a href="javascript:$('#form_id').submit();">Sair</a></li>  -->                               
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <h3>Detalhes</h3>
+		    	  <div class="row">
+					  <div class="col-sm-6 col-md-4">
+					    <div class="thumbnail">
+					      <div class="caption">
+					        <h4>Informações do Procurador</h4>
+					        <hr>
+					        <div th:each="p : ${procurador}">
+					        	<p style="color: #444;"><b>Nome: </b><span th:text="${p.nome}"></span></p>
+					        	<p style="color: #444;"><b>E-mail: </b><span th:text="${p.email}"></span></p>
+					        	<p style="color: #444;"><b>UF: </b><span th:text="${p.uf}"></span></p>
+					        	<p style="color: #444;"><b>Celular Funcional: </b><span th:text="${p.celular}"></span></p>
+					        	<p style="color: #444;"><b>Telefone: </b><span th:text="${p.telefone}"></span></p>
+					        	<p style="color: #444;"><b>Portaria: </b><span th:text="${p.portaria}"></span></p>
+					        	<p style="color: #444;"><b>Início do Mandato: </b><span th:text="${p.inicioMandato}"></span></p>
+					        	<p style="color: #444;"><b>Fim do Mandato: </b><span th:text="${p.fimMandato}"></span></p>
+					        	<p style="color: #444; text-align: justify;"><b>Etiqueta: <br></b><span th:text="${p.etiqueta_endereco}"></span></p>
+					        	
+					        
+						        <button type="button" class="btn btn-primary modal_ajax" th:id="${p.id}" data-toggle="modal" data-target="#editar">
+						        	<i class="fa fa-pencil" aria-hidden="true"></i>	Editar informações
+						        </button>
+					        </div>
+					      </div>
+					    </div>
+					  </div>
+					  
+					  <div class="col-sm-6 col-md-4">
+					    <div class="thumbnail">
+					      <div class="caption">
+					        <h4>Informações do Procurador Substituto</h4>
+					        <hr>
+					        <div th:each="s : ${substituto}">
+					        	<p style="color: #444;"><b>Nome: </b><span th:text="${s.nome}"></span></p>
+					        	<p style="color: #444;"><b>E-mail: </b><span th:text="${s.email}"></span></p>
+					        	<p style="color: #444;"><b>UF: </b><span th:text="${s.uf}"></span></p>
+					        	<p style="color: #444;"><b>Celular Funcional: </b><span th:text="${s.celular}"></span></p>
+					        	<p style="color: #444;"><b>Portaria: </b><span th:text="${s.portaria}"></span></p>
+					        	<p style="color: #444;"><b>Início do Mandato: </b><span th:text="${s.inicioMandato}"></span></p>
+					        	<p style="color: #444;"><b>Fim do Mandato: </b><span th:text="${s.fimMandato}"></span></p>
+
+						        <button type="button" class="btn btn-primary modal_ajax_sub" th:id="${s.id}" data-toggle="modal" data-target="#editarSubstituto">
+						        	<i class="fa fa-pencil" aria-hidden="true"></i>	Editar informações
+						        </button>
+					        </div>
+					      </div>
+					    </div>
+					  </div>
+					  
+					  <div class="col-sm-6 col-md-4">
+					    <div class="thumbnail">
+					      <div class="caption">
+					        <h4>Informações do Secretário</h4>
+					        <hr>
+					        <div th:each="sec : ${secretario}">
+					        	<p style="color: #444;"><b>Nome: </b><span th:text="${sec.nome}"></span></p>
+					        	<p style="color: #444;"><b>E-mail: </b><span th:text="${sec.email}"></span></p>
+					        	<p style="color: #444;"><b>telefone: </b><span th:text="${sec.telefone}"></span></p>
+					        
+						        <button type="button" class="btn btn-primary modal_ajax_sec" th:id="${sec.id}" data-toggle="modal" data-target="#editarSec">
+						        	<i class="fa fa-pencil" aria-hidden="true"></i>	Editar informações
+						        </button>
+					        </div>
+					      </div>
+					    </div>
+					  </div>
+					  
+					</div>
+          
+			    
+			    <div class="line"></div>
+			</div>
+        </div>
+        
+       
+       		<!-- Modal Procurador-->
+		<div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalLabel">Editar dados do Procurador</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="/cadastrarProcurador" id="alterar_procurador">
+		          <div class="form-group">
+		            <label for="recipient-name" class="col-form-label">Nome:</label>
+		            <input type="text" class="form-control" name="nome" id="nome">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">E-mail:</label>
+		            <input type="text" class="form-control" name="email" id="email">
+		          </div>
+		          
+		          <label>Procurador Substituto:</label>
+	          	  <select id="substituto" name="substituto_id" class="form-control">
+					<div th:each="s : ${substitutos}">
+				    	<option th:value="${s.id}" th:text="${s.nome}"></option>
+				    </div>
+				  </select>
+				  <br>
+				  
+				  <label>Secretário:</label>
+	          	  <select id="secretario" name="secretario_id" class="form-control">
+					<div th:each="sec : ${secretarios}">
+				    	<option th:value="${sec.id}" th:text="${sec.nome}"></option>
+				    </div>
+				  </select>
+				  <br>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Celular Funcional:</label>
+		            <input type="text" class="form-control telefone" name="celular" id="celular" placeholder="Ex: (99) 99999-9999">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">UF:</label>
+		          	<select id="uf" name="uf" class="form-control">
+					    <option value="AC">Acre</option>
+					    <option value="AL">Alagoas</option>
+					    <option value="AP">Amapá</option>
+					    <option value="AM">Amazonas</option>
+					    <option value="BA">Bahia</option>
+					    <option value="CE">Ceará</option>
+					    <option value="DF">Distrito Federal</option>
+					    <option value="ES">Espírito Santo</option>
+					    <option value="GO">Goiás</option>
+					    <option value="MA">Maranhão</option>
+					    <option value="MT">Mato Grosso</option>
+					    <option value="MS">Mato Grosso do Sul</option>
+					    <option value="MG">Minas Gerais</option>
+					    <option value="PA">Pará</option>
+					    <option value="PB">Paraíba</option>
+					    <option value="PR">Paraná</option>
+					    <option value="PE">Pernambuco</option>
+					    <option value="PI">Piauí</option>
+					    <option value="RJ">Rio de Janeiro</option>
+					    <option value="RN">Rio Grande do Norte</option>
+					    <option value="RS">Rio Grande do Sul</option>
+					    <option value="RO">Rondônia</option>
+					    <option value="RR">Roraima</option>
+					    <option value="SC">Santa Catarina</option>
+					    <option value="SP">São Paulo</option>
+					    <option value="SE">Sergipe</option>
+					    <option value="TO">Tocantins</option>
+					</select>
+				  </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Portaria:</label>
+		            <input type="text" class="form-control" name="portaria" id="portaria">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Início do Mandato:</label>
+		            <input type="date" class="form-control" name="inicioMandato" id="inicioMandato">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Fim do Mandato:</label>
+		            <input type="date" class="form-control" name="fimMandato" id="fimMandato">
+		          </div>
+		          
+		          <div class="form-group">
+		          	<label for="message-text" class="col-form-label">Etiqueta - Endereço Procuradoria:</label>
+		          	<textarea class="form-control" name="etiqueta_endereco" id="etiqueta_endereco"></textarea>
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Telefone:</label>
+		            <input type="text" class="form-control telefone" name="telefone" id="telefone" placeholder="Ex: (99) 9999-9999">
+		          </div>
+		          
+		        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+		        <button type="submit" class="btn btn-primary">Alterar</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- Modal Substituto-->
+		<div class="modal fade" id="editarSubstituto" tabindex="-1" role="dialog" aria-labelledby="editarModalSubstituto" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalSubstituto">Editar dados do Procurador Substituto</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="/cadastrarSubstituto" id="alterar_substituto">
+		          <div class="form-group">
+		            <label for="recipient-name" class="col-form-label">Nome:</label>
+		            <input type="text" class="form-control" name="nome" id="nome_sub">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">E-mail:</label>
+		            <input type="text" class="form-control" name="email" id="email_sub">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Celular Funcional:</label>
+		            <input type="text" class="form-control telefone" name="celular" id="celular_sub" placeholder="Ex: (99) 99999-9999">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">UF:</label>
+		          	<select id="uf_sub" name="uf" class="form-control">
+					    <option value="AC">Acre</option>
+					    <option value="AL">Alagoas</option>
+					    <option value="AP">Amapá</option>
+					    <option value="AM">Amazonas</option>
+					    <option value="BA">Bahia</option>
+					    <option value="CE">Ceará</option>
+					    <option value="DF">Distrito Federal</option>
+					    <option value="ES">Espírito Santo</option>
+					    <option value="GO">Goiás</option>
+					    <option value="MA">Maranhão</option>
+					    <option value="MT">Mato Grosso</option>
+					    <option value="MS">Mato Grosso do Sul</option>
+					    <option value="MG">Minas Gerais</option>
+					    <option value="PA">Pará</option>
+					    <option value="PB">Paraíba</option>
+					    <option value="PR">Paraná</option>
+					    <option value="PE">Pernambuco</option>
+					    <option value="PI">Piauí</option>
+					    <option value="RJ">Rio de Janeiro</option>
+					    <option value="RN">Rio Grande do Norte</option>
+					    <option value="RS">Rio Grande do Sul</option>
+					    <option value="RO">Rondônia</option>
+					    <option value="RR">Roraima</option>
+					    <option value="SC">Santa Catarina</option>
+					    <option value="SP">São Paulo</option>
+					    <option value="SE">Sergipe</option>
+					    <option value="TO">Tocantins</option>
+					</select>
+				  </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Portaria:</label>
+		            <input type="text" class="form-control" name="portaria" id="portaria_sub">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Início do Mandato:</label>
+		            <input type="date" class="form-control" name="inicioMandato" id="inicioMandato_sub">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Fim do Mandato:</label>
+		            <input type="date" class="form-control" name="fimMandato" id="fimMandato_sub">
+		          </div>	        
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+		        <button type="submit" class="btn btn-primary">Alterar</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- Modal Secretário-->
+		<div class="modal fade" id="editarSec" tabindex="-1" role="dialog" aria-labelledby="editarModalSec" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">		        
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>		          
+		        </button>
+		        <h5 class="modal-title" id="editarModalSec">Editar dados do Procurador</h5>
+		      </div>
+		      <div class="modal-body">
+		        <form method="POST" action="/cadastrarSecretario" id="alterar_secretario">
+		          <div class="form-group">
+		            <label for="recipient-name" class="col-form-label">Nome:</label>
+		            <input type="text" class="form-control" name="nome" id="nome_sec">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">E-mail:</label>
+		            <input type="text" class="form-control" name="email" id="email_sec">
+		          </div>
+		          
+		          <div class="form-group">
+		            <label for="message-text" class="col-form-label">Telefone:</label>
+		            <input type="text" class="form-control telefone" name="telefone" id="telefone_sec" placeholder="Ex: (99) 9999-9999">
+		          </div>
+
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+		        <button type="submit" class="btn btn-primary">Alterar</button>
+		      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+    <!-- jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- JQuery Confirm -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+	
+	<script>		
+	
+    	$(document).ready(function() {    		
+    		
+    		////// MENU///////
+    		
+    		$('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+    		
+    		$(document).on('click', '.modal_ajax', function(){
+     		   var id = $(this).attr('id');
+
+     		        $.ajax({
+     		            url:"/buscaProcurador",
+     		            method:"GET",
+     		            data:{id:id},
+     		            dataType:"json",
+     		       
+ 	    		       	success:function(data){
+ 	
+ 	    		          $("#nome").val(data.nome);
+ 	    		          $("#email").val(data.email);
+ 	    		          $("#celular").val(data.celular);
+ 	    		          $("#portaria").val(data.portaria);
+ 	    		          $("#uf").val(data.uf).change();
+ 	    		          $("#inicioMandato").val(data.inicioMandato);
+ 	    		          $("#fimMandato").val(data.fimMandato);
+ 	    		          $("#etiqueta_endereco").val(data.etiqueta_endereco);
+ 	    		          $("#telefone").val(data.telefone);
+ 	    		          $("#secretario").val(data.secretario.id).change();
+	    		          $("#substituto").val(data.substituto.id).change();	          
+ 	    		          
+ 	    		      	},
+ 	    		      	error: function (data) {
+ 	
+ 	    		        	console.log('An error occurred.');	
+ 	    		    	}
+     		    	});
+ 	    		        
+ 	   		        $('#alterar_procurador').submit(function(event){
+ 	   		            event.preventDefault(); 
+ 	   		            var form = $(this);
+ 	   		            $.ajax({
+ 	   		              type: form.attr('method'),
+ 	   		              url: form.attr('action'),
+ 	   		              data: form.serialize()+"&id="+id,
+
+ 	   		              success: function (response) {
+ 	
+ 	   		            	$('#editar').modal('hide');
+ 	   		            	$.alert({
+ 	   		            		title: '',
+ 	   		            		icon: 'fa fa-check-circle',
+ 	   		 			    	content: 'Procurador Alterado com <b> Sucesso! </b>',
+ 			                    type: 'green',
+ 			                    buttons: {
+ 			                        ok: function(){
+ 			                        	location.reload();
+ 			                        }
+ 			                    }
+ 	   		 				});
+ 	   		              },
+ 	   		              
+ 	   		              error: function (data) {
+ 								console.log(data);
+ 	   		              },
+ 	   		              
+ 	   		         });
+ 	   		    });
+ 	   		        
+ 	   		        
+    		});
+    		
+    		$(document).on('click', '.modal_ajax_sub', function(){
+     		   var id = $(this).attr('id');
+
+     		        $.ajax({
+     		            url:"/buscaSubstituto",
+     		            method:"GET",
+     		            data:{id:id},
+     		            dataType:"json",
+     		       
+ 	    		       	success:function(data){
+ 	
+ 	    		          $("#nome_sub").val(data.nome);
+ 	    		          $("#email_sub").val(data.email);
+ 	    		          $("#celular_sub").val(data.celular);
+ 	    		          $("#portaria_sub").val(data.portaria);
+ 	    		          $("#uf_sub").val(data.uf).change();
+ 	    		          $("#inicioMandato_sub").val(data.inicioMandato);
+ 	    		          $("#fimMandato_sub").val(data.fimMandato);
+ 	    		          
+ 	    		      	},
+ 	    		      	error: function (data) {
+ 	
+ 	    		        	console.log('An error occurred.');	
+ 	    		    	}
+     		    	});
+ 	    		        
+ 	   		        $('#alterar_substituto').submit(function(event){
+ 	   		            event.preventDefault(); 
+ 	   		            var form = $(this);
+ 	   		            $.ajax({
+ 	   		              type: form.attr('method'),
+ 	   		              url: form.attr('action'),
+ 	   		              data: form.serialize()+"&id="+id,
+
+ 	   		              success: function (response) {
+ 	
+ 	   		            	$('#editar').modal('hide');
+ 	   		            	$.alert({
+ 	   		            		title: '',
+ 	   		            		icon: 'fa fa-check-circle',
+ 	   		 			    	content: 'Procurador Substituto Alterado com <b> Sucesso! </b>',
+ 			                    type: 'green',
+ 			                    buttons: {
+ 			                        ok: function(){
+ 			                        	location.reload();
+ 			                        }
+ 			                    }
+ 	   		 				});
+ 	   		              },
+ 	   		              
+ 	   		              error: function (data) {
+ 								console.log(data);
+ 	   		              },
+ 	   		              
+ 	   		         });
+    		            
+    		      });
+ 	   		        
+ 	   		    $(document).on('click', '.modal_ajax_sec', function(){
+ 	    		   var id = $(this).attr('id');
+
+ 	    		        $.ajax({
+ 	    		            url:"/buscaSecretario",
+ 	    		            method:"GET",
+ 	    		            data:{id:id},
+ 	    		            dataType:"json",
+ 	    		       
+ 		    		       	success:function(data){
+ 		
+ 		    		          $("#nome_sec").val(data.nome);
+ 		    		          $("#email_sec").val(data.email);
+ 		    		          $("#telefone_sec").val(data.telefone);
+ 		    		          
+ 		    		      	},
+ 		    		      	error: function (data) {
+ 		
+ 		    		        	console.log('An error occurred.');	
+ 		    		    	}
+ 	    		    	});
+ 		    		        
+ 		   		        $('#alterar_secretario').submit(function(event){
+ 		   		            event.preventDefault(); 
+ 		   		            var form = $(this);
+ 		   		            $.ajax({
+ 		   		              type: form.attr('method'),
+ 		   		              url: form.attr('action'),
+ 		   		              data: form.serialize()+"&id="+id,
+
+ 		   		              success: function (response) {
+ 		
+ 		   		            	$('#editarSec').modal('hide');
+ 		   		            	$.alert({
+ 		   		            		title: '',
+ 		   		            		icon: 'fa fa-check-circle',
+ 		   		 			    	content: 'Secretário Alterado com <b> Sucesso! </b>',
+ 				                    type: 'green',
+ 				                    buttons: {
+ 				                        ok: function(){
+ 				                        	location.reload();
+ 				                        }
+ 				                    }
+ 		   		 				});
+ 		   		              },
+ 		   		              
+ 		   		              error: function (data) {
+ 									console.log(data);
+ 		   		              },
+ 		   		              
+ 		   		         });
+ 	   		            
+ 	   		      	}); 
+ 	   			});
+    		});       
+        });
+	</script>
+</body>
+</html>
